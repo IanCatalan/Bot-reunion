@@ -17,6 +17,29 @@ client.once("ready", () => {
   console.log(`✅ Bot conectado como ${client.user.tag}`);
 });
 
+// --- EVENTO: cuando un nuevo usuario se une al servidor ---
+client.on("guildMemberAdd", async (member) => {
+  try {
+    // Ignorar bots
+    if (member.user.bot) return;
+
+    const guild = member.guild;
+    
+    // Buscar el rol "Cliente"
+    let rolCliente = guild.roles.cache.find((r) => r.name === "Cliente");
+    
+    if (rolCliente) {
+      // Asignar el rol al nuevo miembro
+      await member.roles.add(rolCliente);
+      console.log(`✅ Rol "Cliente" asignado a ${member.user.tag}`);
+    } else {
+      console.log(`⚠️ No se encontró el rol "Cliente" en el servidor`);
+    }
+  } catch (error) {
+    console.error("❌ Error al asignar rol de Cliente:", error);
+  }
+});
+
 // --- COMANDO: !reunion NombreCliente ---
 client.on("messageCreate", async (message) => {
   if (message.author.bot) return;
